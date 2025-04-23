@@ -39,12 +39,12 @@ public class GenralController
         return "Welcome "+name +" age is  "+age;
     }
 
-    @RequestMapping("/student")
+   /* @RequestMapping("/student")
     public Student getRandomStudent(){
 
         Student student = new Student(1,"Vimal",34);
         return student;
 
-    }
+    }*/
 
 }
