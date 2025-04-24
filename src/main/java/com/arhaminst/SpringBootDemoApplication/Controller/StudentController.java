@@ -1,8 +1,8 @@
 package com.arhaminst.SpringBootDemoApplication.Controller;
 
 import com.arhaminst.SpringBootDemoApplication.Student;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +46,18 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/student")
+//@RequestMapping("/student")
 public class StudentController
 {
 
-    @RequestMapping("/new")    // /student/new
-     public String addNewStudent()
+    List<Student> students = new ArrayList<Student>();
+
+
+     @RequestMapping(value = "/student", method = RequestMethod.POST)// /student/new
+     //@PostMapping("/student")
+     public String addNewStudent(@RequestBody Student student)
     {
+        students.add(student);
         return "Add New Student has been called";
     }
 
@@ -64,24 +69,55 @@ public class StudentController
         return student;
     }
 
-    @RequestMapping("/update")
-    public String updateStudent()
+    @RequestMapping(value = "/student",method = RequestMethod.PUT)
+    public String updateStudent(@RequestBody Student student)
     {
-        return "Update Student has been called";
+        for(Student s : students)
+        {
+            if(s.getRollno()==student.getRollno())
+            {
+                s.setName(student.getName());
+                s.setAge(student.getAge());
+                s.setFees(student.getFees());
+                break;
+            }
+        }
+
+        return "Student Record has been updated";
     }
 
-    @RequestMapping("/view/all")
+
+    @RequestMapping(value = "/student",method = RequestMethod.DELETE)
+     public String deleteStudent(@RequestBody Student student){
+
+         int deleteindex=0;
+         int index=0;
+         for(Student s : students)
+         {
+              if(s.getRollno()== student.getRollno())
+              {
+                  deleteindex=index;
+                  break;
+              }
+              index++;
+         }
+         students.remove(deleteindex);
+
+        return "Student Record has been deleted";
+     }
+
+
+    @RequestMapping(value = "/student",method = RequestMethod.GET)
+    //@GetMapping
     public List<Student> viewAllStudent()
     {
-         List<Student> students = new ArrayList<Student>();
-         students.add(new Student(1,"vimal",34,23000));
-         students.add(new Student(2,"viren",34,45000));
-         students.add(new Student(3,"vijay",34,65000));
-         students.add(new Student(4,"amit",34,75000));
-         students.add(new Student(5,"jay",34,85000));
          return students;
     }
 
-
+  /*   @RequestMapping("/error")
+     public String errormsg()
+     {
+         return "Website is under maintenance come back later";
+     }*/
 
 }
